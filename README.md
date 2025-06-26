@@ -16,7 +16,7 @@ You're good to go : sudo ./install_choice.sh
 
 ## List of softwares and packages
 
-- Subfinder
-- HTTPX
-- XSSStrike
-- Wapiti
+- Subfinder https://github.com/projectdiscovery/subfinder
+- HTTPX https://github.com/projectdiscovery/httpx
+- XSSStrike https://github.com/s0md3v/XSStrike
+- Wapiti https://github.com/wapiti-scanner/wapiti

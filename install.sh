@@ -96,3 +96,41 @@ echo -e "${GREEN}[✓] HTTPX installé avec succès dans /usr/bin/httpx${RESET}"
 # Nettoyage
 cd ~
 rm -rf "$TMP_DIR"
+
+##########
+#XSSStrike
+##########
+
+INSTALL_DIR="/opt/xssstrike"
+BIN_PATH="/usr/bin/xssstrike"
+
+echo -e "${GREEN}[+] Installation de XSSStrike...${RESET}"
+
+# Vérification de Python 3
+if ! command -v python3 &> /dev/null; then
+    echo -e "${RED}[-] Python3 n'est pas installé.${RESET}"
+    exit 1
+fi
+
+# Clonage du dépôt
+echo -e "${GREEN}[+] Clonage du dépôt GitHub...${RESET}"
+sudo git clone https://github.com/s0md3v/xssstrike "$INSTALL_DIR" || {
+    echo -e "${RED}[-] Échec du clonage du dépôt.${RESET}"
+    exit 1
+}
+
+cd "$INSTALL_DIR" || exit 1
+
+# Installation des dépendances
+echo -e "${GREEN}[+] Installation des dépendances Python...${RESET}"
+sudo pip3 install -r requirements.txt || {
+    echo -e "${RED}[-] Échec de l'installation des dépendances.${RESET}"
+    exit 1
+}
+
+# Ajout d'un lien symbolique
+echo -e "${GREEN}[+] Création du lien symbolique dans /usr/bin...${RESET}"
+sudo ln -sf "$INSTALL_DIR/xssstrike.py" "$BIN_PATH"
+sudo chmod +x "$INSTALL_DIR/xssstrike.py"
+
+echo -e "${GREEN}[✓] XSSStrike est installé. Utilisez la commande : xssstrike${RESET}"

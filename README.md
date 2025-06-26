@@ -17,6 +17,6 @@ You're good to go : sudo ./install_choice.sh
 ## List of softwares and packages
 
 - Update of subfinder
-- Install of httpx
+- Install of HTTPX
 - Clone of XSSStrike
-- TODO wapiti3 maybe with pip install
+- Install Wapiti3

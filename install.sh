@@ -128,3 +128,31 @@ sudo ln -sf "$INSTALL_DIR/xssstrike.py" "$BIN_PATH"
 sudo chmod +x "$INSTALL_DIR/xssstrike.py"
 
 echo -e "${GREEN}[✓] XSSStrike est installé. Utilisez la commande : xssstrike${RESET}"
+
+#WAPITI3
+
+#!/bin/bash
+
+GREEN="\e[32m"
+RED="\e[31m"
+RESET="\e[0m"
+
+INSTALL_DIR="/opt/wapiti"
+BIN_PATH="/usr/bin/wapiti"
+
+echo -e "${GREEN}[+] Installation de Wapiti 3...${RESET}"
+
+sudo apt update
+sudo apt install -y python3 python3-pip git
+
+echo -e "${GREEN}[+] Clonage du dépôt GitHub...${RESET}"
+sudo git clone https://github.com/wapiti-scanner/wapiti.git "$INSTALL_DIR"
+
+cd "$INSTALL_DIR" || exit 1
+sudo pip3 install -r requirements.txt
+
+echo -e "${GREEN}[+] Création du lien dans /usr/bin...${RESET}"
+sudo ln -sf "$INSTALL_DIR/wapiti.py" "$BIN_PATH"
+sudo chmod +x "$INSTALL_DIR/wapiti.py"
+
+echo -e "${GREEN}[✓] Wapiti est prêt. Utilise la commande : wapiti${RESET}"

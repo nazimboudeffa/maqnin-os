@@ -20,3 +20,7 @@ You're good to go : sudo ./install_choice.sh
 - HTTPX https://github.com/projectdiscovery/httpx
 - XSSStrike https://github.com/s0md3v/XSStrike
 - Wapiti https://github.com/wapiti-scanner/wapiti
+
+## LICENSE
+
+NO WARRANTY, please be carefull when you use it, it's actually under development

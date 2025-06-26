@@ -10,9 +10,9 @@ Parrot OS 6.2
 
 clone the repo
 
-chmod+x install.sh
+chmod +x install.sh
 
-You're good to go
+You're good to go : sudo ./install.sh
 
 ## List of softwares and packages
 

@@ -59,21 +59,42 @@ install_xssstrike() {
     echo -e "${GREEN}[✓] XSSStrike installé avec succès.${RESET}"
 }
 
+install_wapiti() {
+    echo -e "${GREEN}[+] Installation de Wapiti 3...${RESET}"
+    sudo apt update
+    sudo apt install -y python3 python3-pip git
+
+    local install_dir="/opt/wapiti"
+    local bin_path="/usr/bin/wapiti"
+
+    sudo git clone https://github.com/wapiti-scanner/wapiti.git "$install_dir"
+    sudo pip3 install -r "$install_dir/requirements.txt"
+
+    sudo ln -sf "$install_dir/wapiti.py" "$bin_path"
+    sudo chmod +x "$install_dir/wapiti.py"
+
+    echo -e "${GREEN}[✓] Wapiti installé avec succès.${RESET}"
+}
+
 ### --- Menu --- ###
 
-echo -e "${GREEN}Installeur d'outils de reconnaissance${RESET}"
-echo "1. Installer Subfinder"
-echo "2. Installer HTTPX"
-echo "3. Installer XSSStrike"
-echo "4. Tout installer"
-echo "0. Quitter"
-read -p "Choix : " choix
+while true; do
+    echo -e "\n${GREEN}==== Installeur d'outils de reconnaissance ====${RESET}"
+    echo "1. Installer Subfinder"
+    echo "2. Installer HTTPX"
+    echo "3. Installer XSSStrike"
+    echo "4. Installer Wapiti"
+    echo "5. Tout installer"
+    echo "0. Quitter"
+    read -p "Choix : " choix
 
-case $choix in
-    1) install_subfinder ;;
-    2) install_httpx ;;
-    3) install_xssstrike ;;
-    4) install_subfinder && install_httpx && install_xssstrike ;;
-    0) echo "Annulé." ;;
-    *) echo -e "${RED}Choix invalide.${RESET}" ;;
-esac
+    case $choix in
+        1) install_subfinder ;;
+        2) install_httpx ;;
+        3) install_xssstrike ;;
+        4) install_wapiti ;;
+        5) install_subfinder && install_httpx && install_xssstrike && install_wapiti ;;
+        0) echo -e "${GREEN}Fermeture.${RESET}"; exit 0 ;;
+        *) echo -e "${RED}Choix invalide.${RESET}" ;;
+    esac
+done

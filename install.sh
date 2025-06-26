@@ -5,132 +5,75 @@ GREEN="\e[32m"
 RED="\e[31m"
 RESET="\e[0m"
 
-##########
-#SUBFINDER
-##########
+set -e
 
-# URL GitHub API pour obtenir la dernière version
-GITHUB_API_URL="https://api.github.com/repos/projectdiscovery/subfinder/releases/latest"
+### --- Fonctions --- ###
 
-echo -e "${GREEN}[+] Téléchargement des informations de la dernière version de Subfinder...${RESET}"
+install_subfinder() {
+    echo -e "${GREEN}[+] Installation de Subfinder...${RESET}"
+    local url=$(curl -s https://api.github.com/repos/projectdiscovery/subfinder/releases/latest | grep browser_download_url | grep linux_amd64 | cut -d '"' -f 4)
+    [[ -z "$url" ]] && echo -e "${RED}[-] Échec de récupération de l'URL Subfinder${RESET}" && return 1
 
-# Obtenir la dernière version
-LATEST_URL=$(curl -s "$GITHUB_API_URL" | grep browser_download_url | grep linux_amd64 | cut -d '"' -f 4)
+    tmpdir=$(mktemp -d)
+    cd "$tmpdir"
+    curl -LO "$url"
+    tar -xzf subfinder-linux-amd64*.tar.gz
 
-if [[ -z "$LATEST_URL" ]]; then
-    echo -e "${RED}[-] Impossible de récupérer l'URL de téléchargement.${RESET}"
-    exit 1
-fi
-
-echo -e "${GREEN}[+] URL trouvée : $LATEST_URL${RESET}"
-echo -e "${GREEN}[+] Téléchargement de l'archive...${RESET}"
-
-# Téléchargement
-TMP_DIR=$(mktemp -d)
-cd "$TMP_DIR" || exit 1
-curl -LO "$LATEST_URL"
-
-ARCHIVE_NAME=$(basename "$LATEST_URL")
-tar -xzf "$ARCHIVE_NAME"
-
-if [[ ! -f subfinder ]]; then
-    echo -e "${RED}[-] Le binaire subfinder n'a pas été trouvé après extraction.${RESET}"
-    exit 1
-fi
-
-echo -e "${GREEN}[+] Binaire extrait avec succès.${RESET}"
-
-# Déplacement dans /usr/bin
-echo -e "${GREEN}[+] Déplacement de subfinder vers /usr/bin/subfinder...${RESET}"
-sudo mv subfinder /usr/bin/subfinder
-sudo chmod +x /usr/bin/subfinder
-
-echo -e "${GREEN}[✓] Subfinder installé avec succès dans /usr/bin/subfinder${RESET}"
-
-# Nettoyage
-cd ~
-rm -rf "$TMP_DIR"
-
-######
-#HTTPX
-######
-
-# API GitHub pour la dernière version
-GITHUB_API_URL="https://api.github.com/repos/projectdiscovery/httpx/releases/latest"
-
-echo -e "${GREEN}[+] Téléchargement des informations de la dernière version de HTTPX...${RESET}"
-
-# Récupérer l’URL de téléchargement du binaire linux_amd64
-LATEST_URL=$(curl -s "$GITHUB_API_URL" | grep browser_download_url | grep linux_amd64 | cut -d '"' -f 4)
-
-if [[ -z "$LATEST_URL" ]]; then
-    echo -e "${RED}[-] Impossible de récupérer l'URL de téléchargement de HTTPX.${RESET}"
-    exit 1
-fi
-
-echo -e "${GREEN}[+] URL trouvée : $LATEST_URL${RESET}"
-echo -e "${GREEN}[+] Téléchargement de l'archive...${RESET}"
-
-# Créer un répertoire temporaire
-TMP_DIR=$(mktemp -d)
-cd "$TMP_DIR" || exit 1
-curl -LO "$LATEST_URL"
-
-ARCHIVE_NAME=$(basename "$LATEST_URL")
-tar -xzf "$ARCHIVE_NAME"
-
-if [[ ! -f httpx ]]; then
-    echo -e "${RED}[-] Le binaire httpx n'a pas été trouvé après extraction.${RESET}"
-    exit 1
-fi
-
-echo -e "${GREEN}[+] Binaire extrait avec succès.${RESET}"
-
-# Déplacement dans /usr/bin
-echo -e "${GREEN}[+] Installation de httpx dans /usr/bin...${RESET}"
-sudo mv httpx /usr/bin/httpx
-sudo chmod +x /usr/bin/httpx
-
-echo -e "${GREEN}[✓] HTTPX installé avec succès dans /usr/bin/httpx${RESET}"
-
-# Nettoyage
-cd ~
-rm -rf "$TMP_DIR"
-
-##########
-#XSSStrike
-##########
-
-INSTALL_DIR="/opt/xssstrike"
-BIN_PATH="/usr/bin/xssstrike"
-
-echo -e "${GREEN}[+] Installation de XSSStrike...${RESET}"
-
-# Vérification de Python 3
-if ! command -v python3 &> /dev/null; then
-    echo -e "${RED}[-] Python3 n'est pas installé.${RESET}"
-    exit 1
-fi
-
-# Clonage du dépôt
-echo -e "${GREEN}[+] Clonage du dépôt GitHub...${RESET}"
-sudo git clone https://github.com/s0md3v/xssstrike "$INSTALL_DIR" || {
-    echo -e "${RED}[-] Échec du clonage du dépôt.${RESET}"
-    exit 1
+    sudo mv subfinder /usr/bin/subfinder
+    sudo chmod +x /usr/bin/subfinder
+    echo -e "${GREEN}[✓] Subfinder installé avec succès.${RESET}"
+    cd ~
+    rm -rf "$tmpdir"
 }
 
-cd "$INSTALL_DIR" || exit 1
+install_httpx() {
+    echo -e "${GREEN}[+] Installation de HTTPX...${RESET}"
+    local url=$(curl -s https://api.github.com/repos/projectdiscovery/httpx/releases/latest | grep browser_download_url | grep linux_amd64 | cut -d '"' -f 4)
+    [[ -z "$url" ]] && echo -e "${RED}[-] Échec de récupération de l'URL HTTPX${RESET}" && return 1
 
-# Installation des dépendances
-echo -e "${GREEN}[+] Installation des dépendances Python...${RESET}"
-sudo pip3 install -r requirements.txt || {
-    echo -e "${RED}[-] Échec de l'installation des dépendances.${RESET}"
-    exit 1
+    tmpdir=$(mktemp -d)
+    cd "$tmpdir"
+    curl -LO "$url"
+    tar -xzf httpx-linux-amd64*.tar.gz
+
+    sudo mv httpx /usr/bin/httpx
+    sudo chmod +x /usr/bin/httpx
+    echo -e "${GREEN}[✓] HTTPX installé avec succès.${RESET}"
+    cd ~
+    rm -rf "$tmpdir"
 }
 
-# Ajout d'un lien symbolique
-echo -e "${GREEN}[+] Création du lien symbolique dans /usr/bin...${RESET}"
-sudo ln -sf "$INSTALL_DIR/xssstrike.py" "$BIN_PATH"
-sudo chmod +x "$INSTALL_DIR/xssstrike.py"
+install_xssstrike() {
+    echo -e "${GREEN}[+] Installation de XSSStrike...${RESET}"
+    sudo apt-get update -y
+    sudo apt-get install -y python3 python3-pip git
 
-echo -e "${GREEN}[✓] XSSStrike est installé. Utilisez la commande : xssstrike${RESET}"
+    local install_dir="/opt/xssstrike"
+    local bin_path="/usr/bin/xssstrike"
+
+    sudo git clone https://github.com/s0md3v/xssstrike "$install_dir"
+    sudo pip3 install -r "$install_dir/requirements.txt"
+
+    sudo ln -sf "$install_dir/xssstrike.py" "$bin_path"
+    sudo chmod +x "$install_dir/xssstrike.py"
+    echo -e "${GREEN}[✓] XSSStrike installé avec succès.${RESET}"
+}
+
+### --- Menu --- ###
+
+echo -e "${GREEN}Installeur d'outils de reconnaissance${RESET}"
+echo "1. Installer Subfinder"
+echo "2. Installer HTTPX"
+echo "3. Installer XSSStrike"
+echo "4. Tout installer"
+echo "0. Quitter"
+read -p "Choix : " choix
+
+case $choix in
+    1) install_subfinder ;;
+    2) install_httpx ;;
+    3) install_xssstrike ;;
+    4) install_subfinder && install_httpx && install_xssstrike ;;
+    0) echo "Annulé." ;;
+    *) echo -e "${RED}Choix invalide.${RESET}" ;;
+esac

@@ -23,4 +23,4 @@ You're good to go : sudo ./install_choice.sh
 
 ## LICENSE
 
-NO WARRANTY, please be carefull when you use it, it's actually under development
+The is NO WARRANTY using this soft, please be carefull when you use it, it's actually under development

@@ -4,7 +4,7 @@ Maqnin or carduelis, (chardonneret in french) is a little script made to update 
 
 ## Requirements
 
-Parrot OS 6.2
+Parrot OS 6.3.2
 
 ## Installation
 

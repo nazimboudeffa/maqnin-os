@@ -1,3 +1,5 @@
+![](https://cdn-s-www.leprogres.fr/images/80581056-9a58-4b09-ac83-e87ff47b0433/NW_listE/photo-claude-nardin-1721902672.jpg)
+
 # Maqnin OS
 
 Maqnin or carduelis, (chardonneret in french) is a little script made to update Parrot OS with latest packages and scripts
